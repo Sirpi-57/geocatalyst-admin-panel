@@ -1,0 +1,1546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - GeoCatalyst</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/tus-js-client@1.8.0/dist/tus.min.js"></script> -->
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body class="dashboard-page">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-container">
+                <div class="logo-circle">GC</div>
+                <h2>GeoCatalyst</h2>
+            </div>
+            <p class="sidebar-subtitle">Admin Panel</p>
+        </div>
+
+        <nav class="sidebar-nav">
+            <ul class="nav-menu">
+                <li class="nav-item active" data-section="dashboard">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">Dashboard</span>
+                </li>
+                <li class="nav-item" data-section="videos">
+                    <span class="nav-icon">🎥</span>
+                    <span class="nav-text">Videos</span>
+                </li>
+                <li class="nav-item" data-section="tests">
+                    <span class="nav-icon">📝</span>
+                    <span class="nav-text">Tests</span>
+                </li>
+                <li class="nav-item" data-section="materials">
+                    <span class="nav-icon">📚</span>
+                    <span class="nav-text">Study Materials</span>
+                </li>
+                <li class="nav-item" data-section="doubts">
+                    <span class="nav-icon">💬</span>
+                    <span class="nav-text">Doubts</span>
+                </li>
+                <li class="nav-item" data-section="users">
+                    <span class="nav-icon">👥</span>
+                    <span class="nav-text">Users</span>
+                </li>
+                <li class="nav-item" data-section="analytics">
+                    <span class="nav-icon">📈</span>
+                    <span class="nav-text">Analytics</span>
+                </li>
+                <li class="nav-item" data-section="settings">
+                    <span class="nav-icon">⚙️</span>
+                    <span class="nav-text">Settings</span>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="admin-profile" id="adminProfile">
+                <div class="admin-avatar">
+                    <span id="adminInitials">AD</span>
+                </div>
+                <div class="admin-info">
+                    <p class="admin-name" id="adminName">Loading...</p>
+                    <p class="admin-email" id="adminEmail">Loading...</p>
+                </div>
+            </div>
+            <button class="btn-logout" id="logoutBtn">
+                <span>🚪</span>
+                <span>Logout</span>
+            </button>
+        </div>
+    </aside>
+
+    <main class="main-content" id="mainContent">
+        <header class="top-bar">
+            <button class="sidebar-toggle" id="sidebarToggle">
+                <span>☰</span>
+            </button>
+            <h1 class="page-title" id="pageTitle">Dashboard</h1>
+            <div class="top-bar-actions">
+                <button class="btn-icon" id="refreshBtn" title="Refresh">
+                    <span>🔄</span>
+                </button>
+            </div>
+        </header>
+
+        <section class="content-section active" id="dashboardSection">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-content">
+                        <p class="stat-label">Total Students</p>
+                        <p class="stat-value" id="totalStudents">0</p>
+                        <p class="stat-change positive" id="studentsChange">+0 this month</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-content">
+                        <p class="stat-label">Total Revenue</p>
+                        <p class="stat-value" id="totalRevenue">₹0</p>
+                        <p class="stat-change positive" id="revenueChange">+₹0 this month</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🎥</div>
+                    <div class="stat-content">
+                        <p class="stat-label">Total Videos</p>
+                        <p class="stat-value" id="totalVideos">0</p>
+                        <p class="stat-change neutral" id="videosInfo">Across all subjects</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📝</div>
+                    <div class="stat-content">
+                        <p class="stat-label">Total Tests</p>
+                        <p class="stat-value" id="totalTests">0</p>
+                        <p class="stat-change neutral" id="testsInfo">Ready to attempt</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💬</div>
+                    <div class="stat-content">
+                        <p class="stat-label">Pending Doubts</p>
+                        <p class="stat-value" id="pendingDoubts">0</p>
+                        <p class="stat-change warning" id="doubtsInfo">Needs attention</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">👤</div>
+                    <div class="stat-content">
+                        <p class="stat-label">Active Users</p>
+                        <p class="stat-value" id="activeUsers">0</p>
+                        <p class="stat-change neutral" id="activeInfo">Last 7 days</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3>Recent Activity</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="activity-list" id="recentActivity">
+                            <p class="empty-state">Loading recent activity...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3>Quick Actions</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="quick-actions">
+                            <button class="quick-action-btn" data-section="videos">
+                                <span class="quick-action-icon">🎥</span>
+                                <span>Upload Video</span>
+                            </button>
+                            <button class="quick-action-btn" data-section="tests">
+                                <span class="quick-action-icon">📝</span>
+                                <span>Create Test</span>
+                            </button>
+                            <button class="quick-action-btn" data-section="doubts">
+                                <span class="quick-action-icon">💬</span>
+                                <span>View Doubts</span>
+                            </button>
+                            <button class="quick-action-btn" data-section="users">
+                                <span class="quick-action-icon">👥</span>
+                                <span>Manage Users</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section" id="videosSection">
+            <div class="section-header">
+                <h2>Video Management</h2>
+                <button class="btn-primary" id="uploadVideoBtn">
+                    <span>➕</span>
+                    <span>Upload Video</span>
+                </button>
+            </div>
+
+            <div class="filters-bar">
+                <select class="filter-select" id="videoSubjectFilter">
+                    <option value="">All Subjects</option>
+                    <option value="Remote Sensing">Remote Sensing</option>
+                    <option value="GIS">GIS</option>
+                    <option value="Image Processing">Image Processing</option>
+                    <option value="GPS">GPS</option>
+                    <option value="Surveying">Surveying</option>
+                    <option value="Engineering Mathematics">Engineering Mathematics</option>
+                    <option value="General Aptitude">General Aptitude</option>
+                    <option value="Other">Other</option>
+                </select>
+                <select class="filter-select" id="videoAccessFilter">
+                    <option value="">All Access Levels</option>
+                    <option value="free">Free</option>
+                    <option value="premium">Premium</option>
+                </select>
+                <input type="text" class="search-input" id="videoSearchInput" placeholder="Search videos...">
+            </div>
+
+            <div class="table-container">
+                <table class="data-table" id="videosTable">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Subject</th>
+                            <th>Chapter</th>
+                            <th>Duration</th>
+                            <th>Access</th>
+                            <th>Views</th>
+                            <th>Uploaded</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="videosTableBody">
+                        <tr>
+                            <td colspan="8" class="empty-state">Loading videos...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="content-section" id="testsSection">
+            <div class="section-header">
+                <h2>Test Management</h2>
+                <button class="btn-primary" id="createTestBtn">
+                    <span>➕</span>
+                    <span>Create Test</span>
+                </button>
+            </div>
+
+            <div class="filters-bar">
+                <select class="filter-select" id="testSubjectFilter">
+                    <option value="">All Subjects</option>
+                    <option value="Remote Sensing">Remote Sensing</option>
+                    <option value="GIS">GIS</option>
+                    <option value="Image Processing">Image Processing</option>
+                    <option value="GPS">GPS</option>
+                    <option value="Surveying">Surveying</option>
+                    <option value="Engineering Mathematics">Engineering Mathematics</option>
+                    <option value="General Aptitude">General Aptitude</option>
+                    <option value="Other">Other</option>
+                </select>
+                <select class="filter-select" id="testTypeFilter">
+                    <option value="">All Types</option>
+                    <option value="practice">Practice</option>
+                    <option value="mock">Mock</option>
+                    <option value="chapter">Chapter-wise</option>
+                    <option value="subject">Subject Test</option>
+                </select>
+                <input type="text" class="search-input" id="testSearchInput" placeholder="Search tests...">
+            </div>
+
+            <div class="table-container">
+                <table class="data-table" id="testsTable">
+                    
+                    <thead>
+                        <tr>
+                            <th>Test Name</th>
+                            <th>Subject</th>
+                            <th>Type</th>
+                            <th>Questions</th>
+                            <th>Total Marks</th> 
+                            <th>Duration</th>
+                            
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="testsTableBody">
+                        <tr>
+                            <td colspan="8" class="empty-state">Loading tests...</td> 
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="content-section" id="materialsSection">
+            <div class="section-header">
+                <h2>Study Materials</h2>
+                <button class="btn-primary" id="uploadMaterialBtn">
+                    <span>➕</span>
+                    <span>Upload Material</span>
+                </button>
+            </div>
+
+            <div class="filters-bar">
+                <select class="filter-select" id="materialSubjectFilter">
+                    <option value="">All Subjects</option>
+                    <option value="Remote Sensing">Remote Sensing</option>
+                    <option value="GIS">GIS</option>
+                    <option value="Image Processing">Image Processing</option>
+                    <option value="GPS">GPS</option>
+                    <option value="Surveying">Surveying</option>
+                    <option value="Engineering Mathematics">Engineering Mathematics</option>
+                    <option value="General Aptitude">General Aptitude</option>
+                    <option value="Other">Other</option>
+                </select>
+                <select class="filter-select" id="materialTypeFilter">
+                    <option value="">All Types</option>
+                    <option value="notes">Notes</option>
+                    <option value="formula">Formula Sheet</option>
+                    <option value="pyq">Previous Year Papers</option>
+                    <option value="reference">Reference</option>
+                </select>
+                <input type="text" class="search-input" id="materialSearchInput" placeholder="Search materials...">
+            </div>
+
+            <div class="table-container">
+                <table class="data-table" id="materialsTable">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Subject</th>
+                            <th>Type</th>
+                            <th>Size</th>
+                            <th>Downloads</th>
+                            <th>Uploaded</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="materialsTableBody">
+                        <tr>
+                            <td colspan="7" class="empty-state">Loading materials...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="content-section" id="doubtsSection">
+            <div class="section-header">
+                <h2>Doubt Management</h2>
+            </div>
+
+            <div class="filters-bar">
+                <select class="filter-select" id="doubtStatusFilter">
+                    <option value="">All Status</option>
+                    <option value="pending">Pending</option>
+                    <option value="answered">Answered</option> 
+                    <option value="resolved">Resolved</option>
+                </select>
+                <select class="filter-select" id="doubtSubjectFilter">
+                    <option value="">All Subjects</option>
+                    <option value="Remote Sensing">Remote Sensing</option>
+                    <option value="GIS">GIS</option>
+                    <option value="Image Processing">Image Processing</option>
+                    <option value="GPS">GPS</option>
+                    <option value="Surveying">Surveying</option>
+                    <option value="Engineering Mathematics">Engineering Mathematics</option>
+                    <option value="General Aptitude">General Aptitude</option>
+                    <option value="Other">Other</option>
+                </select>
+                <input type="text" class="search-input" id="doubtSearchInput" placeholder="Search doubts...">
+            </div>
+
+            <div class="doubts-list" id="doubtsList">
+                <p class="empty-state">Loading doubts...</p>
+            </div>
+        </section>
+
+        <section class="content-section" id="usersSection">
+            <div class="section-header">
+                <h2>User Management</h2>
+            </div>
+
+            <div class="filters-bar">
+                <select class="filter-select" id="userPlanFilter">
+                    <option value="">All Plans</option>
+                    <option value="free">Free</option>
+                    <option value="premium">Premium</option> 
+                    <option value="master">Master</option>
+                </select>
+                <select class="filter-select" id="userSortFilter">
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="name">Name A-Z</option>
+                </select>
+                <input type="text" class="search-input" id="userSearchInput" placeholder="Search users...">
+            </div>
+
+            <div class="table-container">
+                <table class="data-table" id="usersTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Plan</th>
+                            <th>Registered</th>
+                            <th>Last Active</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <tr>
+                            <td colspan="6" class="empty-state">Loading users...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="content-section" id="analyticsSection">
+            <div class="section-header">
+                <h2>Analytics & Reports</h2>
+                <div class="analytics-filters">
+                    <select class="filter-select" id="analyticsDateRange">
+                        <option value="7">Last 7 Days</option>
+                        <option value="30" selected>Last 30 Days</option>
+                        <option value="90">Last 90 Days</option>
+                        <option value="365">All Time</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Test Performance Analytics -->
+            <div class="analytics-section">
+                <h3>📊 Test Performance Analytics</h3>
+                
+                <!-- Performance Table -->
+                <div class="analytics-card">
+                    <h4>Test Performance Overview</h4>
+                    <div class="table-container">
+                        <table class="data-table" id="testPerformanceTable">
+                            <thead>
+                                <tr>
+                                    <th>Test Name</th>
+                                    <th>Subject</th>
+                                    <th>Attempts</th>
+                                    <th>Avg Score</th>
+                                    <th>Avg %</th>
+                                    <th>Highest</th>
+                                    <th>Lowest</th>
+                                    <th>Pass Rate</th>
+                                    <th>Difficulty</th>
+                                </tr>
+                            </thead>
+                            <tbody id="testPerformanceTableBody">
+                                <tr>
+                                    <td colspan="9" class="empty-state">Loading...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Difficulty Chart -->
+                <div class="analytics-card">
+                    <h4>Test Difficulty Distribution</h4>
+                    <canvas id="testDifficultyChart" style="max-height: 300px;"></canvas>
+                </div>
+            </div>
+
+            <!-- Engagement Metrics -->
+            <div class="analytics-section">
+                <h3>👥 User Engagement</h3>
+                
+                <div class="analytics-grid">
+                    <!-- Content Stats -->
+                    <div class="analytics-card">
+                        <h4>Content Overview</h4>
+                        <div class="stats-list">
+                            <div class="stat-item">
+                                <span class="stat-label">Total Videos</span>
+                                <span class="stat-value" id="engagementVideos">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Total Tests</span>
+                                <span class="stat-value" id="engagementTests">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Study Materials</span>
+                                <span class="stat-value" id="engagementMaterials">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Active Learners (7d)</span>
+                                <span class="stat-value" id="engagementActiveLearners">0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Most Watched Videos -->
+                    <div class="analytics-card">
+                        <h4>Most Watched Videos</h4>
+                        <div id="mostWatchedList" class="popular-list">
+                            <p class="empty-state">Loading...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Doubt Resolution Metrics -->
+            <div class="analytics-section">
+                <h3>💬 Doubt Resolution Metrics</h3>
+                
+                <div class="analytics-grid">
+                    <div class="analytics-card">
+                        <div class="doubt-stats">
+                            <div class="doubt-stat-item pending">
+                                <div class="doubt-stat-icon">⏳</div>
+                                <div class="doubt-stat-content">
+                                    <p class="doubt-stat-label">Pending</p>
+                                    <p class="doubt-stat-value" id="doubtsPending">0</p>
+                                </div>
+                            </div>
+                            <div class="doubt-stat-item answered">
+                                <div class="doubt-stat-icon">✅</div>
+                                <div class="doubt-stat-content">
+                                    <p class="doubt-stat-label">Answered</p>
+                                    <p class="doubt-stat-value" id="doubtsAnswered">0</p>
+                                </div>
+                            </div>
+                            <div class="doubt-stat-item resolved">
+                                <div class="doubt-stat-icon">🎯</div>
+                                <div class="doubt-stat-content">
+                                    <p class="doubt-stat-label">Resolved</p>
+                                    <p class="doubt-stat-value" id="doubtsResolved">0</p>
+                                </div>
+                            </div>
+                            <div class="doubt-stat-item today">
+                                <div class="doubt-stat-icon">📅</div>
+                                <div class="doubt-stat-content">
+                                    <p class="doubt-stat-label">Answered Today</p>
+                                    <p class="doubt-stat-value" id="doubtsToday">0</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="analytics-card">
+                        <h4>Response Performance</h4>
+                        <div class="response-stats">
+                            <div class="response-stat">
+                                <p class="response-label">Avg Response Time</p>
+                                <p class="response-value" id="avgResponseTime">0h</p>
+                            </div>
+                            <div class="response-stat">
+                                <p class="response-label">Total Doubts</p>
+                                <p class="response-value" id="totalDoubts">0</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Signup Trends -->
+            <div class="analytics-section">
+                <h3>📈 User Signup Trends</h3>
+                
+                <div class="analytics-card">
+                    <h4>Signups Over Time</h4>
+                    <div class="signup-summary">
+                        <div class="summary-stat">
+                            <span class="summary-label">Total Signups (Period)</span>
+                            <span class="summary-value" id="totalSignupsPeriod">0</span>
+                        </div>
+                    </div>
+                    <canvas id="signupTrendChart" style="max-height: 300px;"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section" id="settingsSection">
+            <div class="section-header">
+                <h2>Platform Settings</h2>
+            </div>
+
+            <div class="settings-grid">
+                <div class="settings-card">
+                    <h3>Pricing Management</h3>
+                    <div class="settings-content">
+                        <div class="pricing-list" id="pricingList">
+                            <p class="empty-state">Loading pricing...</p>
+                        </div>
+                        <button class="btn-secondary" id="updatePricingBtn">Update Pricing</button>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <h3>Subject Management</h3>
+                    <div class="settings-content">
+                        <div class="subjects-list" id="subjectsList">
+                            <p class="empty-state">Loading subjects...</p>
+                        </div>
+                        <button class="btn-secondary" id="manageSubjectsBtn">Manage Subjects</button>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <h3>Platform Information</h3>
+                    <div class="settings-content">
+                        <div class="info-item">
+                            <span class="info-label">Platform Version</span>
+                            <span class="info-value">1.0.0</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Database</span>
+                            <span class="info-value">Firestore</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Video Hosting</span>
+                            <span class="info-value">YouTube (Unlisted)</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Last Backup</span>
+                            <span class="info-value">Auto-synced</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="modal" id="uploadVideoModal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3>Upload Video</h3>
+                <button class="modal-close" data-modal="uploadVideoModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="uploadVideoForm">
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label for="youtubeUrl">YouTube Video URL *</label>
+                            <input type="url" id="youtubeUrl" required 
+                                placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ or https://youtu.be/dQw4w9WgXcQ">
+                            <p class="upload-hint" style="margin-top: 8px; font-size: 0.9em; color: #666;">
+                                📹 Upload your video to YouTube as <strong>Unlisted</strong>, then paste the URL here
+                            </p>
+                            <div id="youtubePreview" style="display: none; margin-top: 10px; padding: 10px; background: #f0f0f0; border-radius: 4px;">
+                                <p style="margin: 0; color: #28a745; font-size: 0.9em;">✅ Valid YouTube URL detected</p>
+                                <p style="margin: 5px 0 0 0; font-size: 0.85em; color: #555;">Video ID: <strong id="detectedVideoId"></strong></p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="videoTitle">Video Title *</label>
+                            <input type="text" id="videoTitle" required placeholder="e.g., Introduction to Remote Sensing">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="videoSubject">Subject *</label>
+                            <select id="videoSubject" required>
+                                <option value="">Select Subject</option>
+                                <option value="Remote Sensing">Remote Sensing</option>
+                                <option value="GIS">GIS</option>
+                                <option value="Image Processing">Image Processing</option>
+                                <option value="GPS">GPS</option>
+                                <option value="Surveying">Surveying</option>
+                                <option value="Engineering Mathematics">Engineering Mathematics</option>
+                                <option value="General Aptitude">General Aptitude</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="videoChapter">Chapter *</label>
+                            <input type="text" id="videoChapter" required placeholder="e.g., Chapter 1">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="videoOrder">Order/Sequence</label>
+                            <input type="number" id="videoOrder" min="1" placeholder="1">
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="videoDescription">Description</label>
+                            <textarea id="videoDescription" rows="3" placeholder="Brief description of the video content"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="videoAccess">Access Level *</label>
+                            <select id="videoAccess" required>
+                                <option value="free">Free</option>
+                                <option value="premium">Premium</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="videoTags">Tags (comma-separated)</label>
+                            <input type="text" id="videoTags" placeholder="e.g., basics, important, gate">
+                        </div>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button type="button" class="btn-secondary" data-modal="uploadVideoModal">Cancel</button>
+                        <button type="submit" class="btn-primary" id="uploadVideoSubmitBtn">
+                            <span>Upload Video</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="createTestModal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3>Create Test</h3>
+                <button class="modal-close" data-modal="createTestModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="createTestForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="testName">Test Name *</label>
+                            <input type="text" id="testName" required placeholder="e.g., Remote Sensing Module 1">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="testSubject">Subject *</label>
+                            <select id="testSubject" required>
+                                <option value="">Select Subject</option>
+                                <option value="Remote Sensing">Remote Sensing</option>
+                                <option value="GIS">GIS</option>
+                                <option value="Image Processing">Image Processing</option>
+                                <option value="GPS">GPS</option>
+                                <option value="Surveying">Surveying</option>
+                                <option value="Engineering Mathematics">Engineering Mathematics</option>
+                                <option value="General Aptitude">General Aptitude</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="testType">Test Type *</label>
+                            <select id="testType" required>
+                                <option value="practice">Practice Test</option>
+                                <option value="mock">Mock Test</option>
+                                <option value="chapter">Chapter-wise Test</option>
+                                <option value="subject">Subject Test</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="testDuration">Duration (minutes) *</label>
+                            <input type="number" id="testDuration" required min="1" placeholder="60">
+                        </div>
+
+                        
+
+                        <div class="form-group full-width">
+                            <label for="testInstructions">Instructions</label>
+                            <textarea id="testInstructions" rows="3" placeholder="Test instructions for students"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="testAccess">Access Level *</label>
+                            <select id="testAccess" required>
+                                <option value="free">Free</option>
+                                <option value="premium">Premium</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button type="button" class="btn-secondary" data-modal="createTestModal">Cancel</button>
+                        <button type="submit" class="btn-primary">Create & Add Questions</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="editTestModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit Test Details</h3>
+                <button class="modal-close" data-modal="editTestModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editTestForm">
+                    <input type="hidden" id="editTestId">
+
+                    <div class="form-group">
+                        <label for="editTestName">Test Name *</label>
+                        <input type="text" id="editTestName" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editTestSubject">Subject *</label>
+                        <select id="editTestSubject" required>
+                            <option value="Remote Sensing">Remote Sensing</option>
+                            <option value="GIS">GIS</option>
+                            <option value="Image Processing">Image Processing</option>
+                            <option value="GPS">GPS</option>
+                            <option value="Surveying">Surveying</option>
+                            <option value="Engineering Mathematics">Engineering Mathematics</option>
+                            <option value="General Aptitude">General Aptitude</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editTestType">Test Type *</label>
+                        <select id="editTestType" required>
+                            <option value="practice">Practice Test</option>
+                            <option value="mock">Mock Test</option>
+                            <option value="chapter">Chapter-wise Test</option>
+                            <option value="subject">Subject Test</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editTestDuration">Duration (minutes) *</label>
+                        <input type="number" id="editTestDuration" required min="1">
+                    </div>
+
+                    
+
+                    <div class="form-group">
+                        <label for="editTestInstructions">Instructions</label>
+                        <textarea id="editTestInstructions" rows="3"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editTestAccess">Access Level *</label>
+                        <select id="editTestAccess" required>
+                            <option value="free">Free</option>
+                            <option value="premium">Premium</option>
+                        </select>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button type="button" class="btn-secondary" data-modal="editTestModal">Cancel</button>
+                        <button type="submit" class="btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="addQuestionsModal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3 id="addQuestionsModalTitle">Manage Questions for Test</h3>
+                <button class="modal-close" data-modal="addQuestionsModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="questions-manager">
+                    
+                    <div class="existing-questions" id="existingQuestions">
+                        <h4>Existing Questions (<span id="questionCount">0</span>) | Total Marks: <span id="testTotalMarksDisplay">0</span></h4>
+                        <div id="questionsList">
+                            <p class="empty-state">No questions added yet</p>
+                        </div>
+                    </div>
+
+                    
+                    <div class="add-question-form">
+                        <h4>Add New Question</h4>
+                        <form id="addQuestionForm">
+                            <input type="hidden" id="questionTestId">
+
+                            <div class="form-group">
+                                <label for="questionType">Question Type *</label>
+                                <select id="questionType" required>
+                                    <option value="mcq">MCQ (Single Answer)</option>
+                                    <option value="msq">MSQ (Multiple Answers)</option>
+                                    <option value="numerical">Numerical</option>
+                                    <option value="true-false">True/False</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="questionText">Question *</label>
+                                <textarea id="questionText" rows="3" required placeholder="Enter question text (LaTeX supported: use $...$ for inline and $$...$$ for block equations)"></textarea>
+                                
+                            </div>
+
+                            <div class="form-group">
+                                <label for="questionImageUpload">Question Image (Optional)</label>
+                                <input type="file" id="questionImageUpload" accept="image/*" class="form-input">
+                                <p class="upload-hint" style="margin-top: 8px; font-size: 0.9em; color: #666;">
+                                    📷 Upload an image if the question requires a diagram, graph, or figure
+                                </p>
+                                
+                                <!-- Image Preview -->
+                                <div id="questionImagePreview" style="display: none; margin-top: 12px; position: relative;">
+                                    <img id="questionImagePreviewImg" src="" alt="Question Image" style="max-width: 100%; max-height: 200px; border-radius: 8px; border: 2px solid #e0e0e0;">
+                                    <button type="button" class="btn btn-sm btn-secondary" id="removeQuestionImageBtn" style="position: absolute; top: 8px; right: 8px; background: rgba(255,255,255,0.9);">
+                                        ✕ Remove
+                                    </button>
+                                </div>
+                            </div>
+
+                            
+                            <div id="mcqOptions" class="options-container">
+                                <label>Options * (Select the single correct answer)</label>
+                                <div class="option-item">
+                                    <input type="text" class="option-input" data-option="A" placeholder="Option A">
+                                    <input type="radio" name="correctOption" value="A" title="Mark as correct">
+                                </div>
+                                <div class="option-item">
+                                    <input type="text" class="option-input" data-option="B" placeholder="Option B">
+                                    <input type="radio" name="correctOption" value="B" title="Mark as correct">
+                                </div>
+                                <div class="option-item">
+                                    <input type="text" class="option-input" data-option="C" placeholder="Option C">
+                                    <input type="radio" name="correctOption" value="C" title="Mark as correct">
+                                </div>
+                                <div class="option-item">
+                                    <input type="text" class="option-input" data-option="D" placeholder="Option D">
+                                    <input type="radio" name="correctOption" value="D" title="Mark as correct">
+                                </div>
+                            </div>
+
+                            <div id="msqOptions" class="options-container" style="display: none;">
+                                <label>Options * (Check all correct answers)</label>
+                                <div class="option-item">
+                                    <input type="text" class="msq-option-input" data-option="A" placeholder="Option A">
+                                    <input type="checkbox" class="msq-correct" value="A" title="Mark as correct">
+                                </div>
+                                <div class="option-item">
+                                    <input type="text" class="msq-option-input" data-option="B" placeholder="Option B">
+                                    <input type="checkbox" class="msq-correct" value="B" title="Mark as correct">
+                                </div>
+                                <div class="option-item">
+                                    <input type="text" class="msq-option-input" data-option="C" placeholder="Option C">
+                                    <input type="checkbox" class="msq-correct" value="C" title="Mark as correct">
+                                </div>
+                                <div class="option-item">
+                                    <input type="text" class="msq-option-input" data-option="D" placeholder="Option D">
+                                    <input type="checkbox" class="msq-correct" value="D" title="Mark as correct">
+                                </div>
+                            </div>
+
+                            <div id="numericalAnswer" class="form-group" style="display: none;">
+                                <label for="numericalCorrectAnswer">Correct Answer *</label>
+                                <input type="number" id="numericalCorrectAnswer" step="any" placeholder="Enter numerical answer">
+                                <label for="numericalTolerance" style="margin-top: 5px; font-size: 0.9em;">Tolerance (±)</label>
+                                <input type="number" id="numericalTolerance" step="any" value="0" placeholder="0">
+                            </div>
+
+                            <div id="trueFalseAnswer" class="form-group" style="display: none;">
+                                <label>Correct Answer *</label>
+                                <div class="radio-group">
+                                    <label><input type="radio" name="trueFalseCorrect" value="true"> True</label>
+                                    <label><input type="radio" name="trueFalseCorrect" value="false"> False</label>
+                                </div>
+                            </div>
+
+                            
+                            <div class="form-group">
+                                <label for="questionMarkValue">Mark Value *</label>
+                                <select id="questionMarkValue" required>
+                                    <option value="1" selected>1 Mark</option>
+                                    <option value="2">2 Marks</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="questionDifficulty">Difficulty</label>
+                                <select id="questionDifficulty">
+                                    <option value="easy">Easy</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="hard">Hard</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="questionExplanation">Solution/Explanation (Text)</label>
+                                <textarea id="questionExplanation" rows="3" placeholder="Detailed solution (optional, LaTeX supported)"></textarea>
+                            </div>
+
+                            <!-- 🆕 ADD THIS NEW SECTION FOR SOLUTION IMAGE -->
+                            <div class="form-group">
+                                <label for="solutionImageUpload">Solution Image (Optional)</label>
+                                <input type="file" id="solutionImageUpload" accept="image/*" class="form-input">
+                                <p class="upload-hint" style="margin-top: 8px; font-size: 0.9em; color: #666;">
+                                    📷 Upload a detailed solution diagram or worked-out solution image
+                                </p>
+                                
+                                <!-- Image Preview -->
+                                <div id="solutionImagePreview" style="display: none; margin-top: 12px; position: relative;">
+                                    <img id="solutionImagePreviewImg" src="" alt="Solution Image" style="max-width: 100%; max-height: 200px; border-radius: 8px; border: 2px solid #e0e0e0;">
+                                    <button type="button" class="btn btn-sm btn-secondary" id="removeSolutionImageBtn" style="position: absolute; top: 8px; right: 8px; background: rgba(255,255,255,0.9);">
+                                        ✕ Remove
+                                    </button>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn-primary">Add Question</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="testResultsModal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3 id="testResultsTitle">Test Results: Loading...</h3>
+                <button class="modal-close" data-modal="testResultsModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                
+                <div class="test-results-summary" id="testResultsSummary">
+                    <div class="summary-item">
+                        <span class="summary-label">Subject</span>
+                        <span class="summary-value" id="resultsSubject">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Total Marks</span>
+                        <span class="summary-value" id="resultsTotalMarks">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Attempts</span>
+                        <span class="summary-value" id="resultsAttemptsCount">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Avg. Score (%)</span>
+                        <span class="summary-value" id="resultsAvgScore">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Highest Score (%)</span>
+                        <span class="summary-value" id="resultsHighScore">-</span>
+                    </div>
+                </div>
+
+                
+                <div class="table-container" style="margin-top: 20px;">
+                    <table class="data-table" id="testResultsTable">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Student Name</th>
+                                <th>Score</th>
+                                <th>Percentage</th>
+                                <th>Correct</th>
+                                <th>Wrong</th>
+                                <th>Unattempted</th>
+                                <th>Time Taken</th>
+                                <th>Submitted At</th>
+                            </tr>
+                        </thead>
+                        <tbody id="testResultsTableBody">
+                            <tr>
+                                <td colspan="9" class="empty-state">Loading results...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary" data-modal="testResultsModal">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .test-results-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+            margin-bottom: 20px; /* Add margin below summary */
+        }
+        .summary-item {
+            text-align: center;
+        }
+        .summary-label {
+            display: block;
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 4px;
+        }
+        .summary-value {
+            font-weight: 600;
+            font-size: 1.1em;
+            color: #333;
+        }
+        
+        .latex-block { display: block; text-align: center; margin: 0.5em 0; }
+        .question-item {
+            border: 1px solid #eee;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            background-color: #fff;
+        }
+        .question-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9em;
+        }
+        .question-number {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        .question-type-badge {
+            background-color: #e0e0e0;
+            color: #333;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            text-transform: uppercase;
+        }
+         .question-marks, .question-negative-marks, .question-difficulty {
+            font-size: 0.85em;
+            color: #555;
+            background-color: #eee;
+             padding: 2px 5px;
+            border-radius: 3px;
+        }
+         .question-negative-marks {
+             color: #c53030; /* Red for negative marks */
+             background-color: #fed7d7;
+         }
+
+        .question-header .btn-icon {
+            margin-left: auto; /* Push delete button to the right */
+            padding: 2px;
+            font-size: 1.1em;
+        }
+        .question-text {
+            padding: 12px;
+            line-height: 1.5;
+            color: #333;
+            /* Allow text selection */
+            user-select: text;
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+        }
+         .empty-state.error-state {
+             color: var(--error-color, #c53030);
+         }
+    </style>
+
+    <div class="modal" id="uploadMaterialModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Upload Study Material</h3>
+                <button class="modal-close" data-modal="uploadMaterialModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="uploadMaterialForm">
+                    <div class="form-group">
+                        <label>PDF File *</label>
+                        <input type="file" id="materialFileInput" accept=".pdf" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="materialTitle">Title *</label>
+                        <input type="text" id="materialTitle" required placeholder="e.g., Remote Sensing Notes">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="materialSubject">Subject *</label>
+                        <select id="materialSubject" required>
+                            <option value="">Select Subject</option>
+                            <option value="Remote Sensing">Remote Sensing</option>
+                            <option value="GIS">GIS</option>
+                            <option value="Image Processing">Image Processing</option>
+                            <option value="GPS">GPS</option>
+                            <option value="Surveying">Surveying</option>
+                            <option value="Engineering Mathematics">Engineering Mathematics</option>
+                            <option value="General Aptitude">General Aptitude</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="materialType">Type *</label>
+                        <select id="materialType" required>
+                            <option value="">Select Type</option>
+                            <option value="notes">Notes</option>
+                            <option value="formula">Formula Sheet</option>
+                            <option value="pyq">Previous Year Papers</option>
+                            <option value="reference">Reference Material</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="materialDescription">Description</label>
+                        <textarea id="materialDescription" rows="3" placeholder="Brief description"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="materialAccess">Access Level *</label>
+                        <select id="materialAccess" required>
+                            <option value="free">Free</option>
+                            <option value="premium">Premium</option>
+                        </select>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button type="button" class="btn-secondary" data-modal="uploadMaterialModal">Cancel</button>
+                        <button type="submit" class="btn-primary">Upload Material</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="viewDoubtModal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3>Doubt Details</h3>
+                <button class="modal-close" data-modal="viewDoubtModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="doubt-detail">
+                    <div class="doubt-info">
+                        <p><strong>Student:</strong> <span id="doubtStudentName">-</span></p>
+                        <p><strong>Email:</strong> <span id="doubtStudentEmail">-</span></p>
+                        <p><strong>Subject:</strong> <span id="doubtSubject">-</span></p>
+                        <p><strong>Chapter:</strong> <span id="doubtChapter">-</span></p> <!-- ADD THIS LINE -->
+                        <p><strong>Date:</strong> <span id="doubtDate">-</span></p>
+                        <p><strong>Status:</strong> <span id="doubtStatus" class="status-badge">-</span></p>
+                    </div>
+
+                    
+                    <!-- {/* <div class="doubt-question">
+                        <h4>Question:</h4>
+                        <p id="doubtQuestion">-</p>
+                    </div> */} -->
+
+                    <div class="doubt-conversation" id="doubtConversation">
+                        
+                         <p class="empty-state">Loading conversation...</p>
+                    </div>
+
+                    <form id="replyDoubtForm">
+                        <div class="form-group">
+                            <label for="doubtReply">Your Reply</label>
+                            <textarea id="doubtReply" rows="4" placeholder="Type your reply here..." required></textarea>
+                        </div>
+
+                        <div class="modal-actions">
+                            <button type="button" class="btn-secondary" id="markResolvedBtn">Mark as Resolved</button>
+                            <button type="submit" class="btn-primary">Send Reply</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="viewUserModal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3>User Details</h3>
+                <button class="modal-close" data-modal="viewUserModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="user-detail">
+                    <div class="user-info-grid">
+                        <div class="user-info-item">
+                            <label>Name</label>
+                            <p id="userDetailName">-</p>
+                        </div>
+                        <div class="user-info-item">
+                            <label>Email</label>
+                            <p id="userDetailEmail">-</p>
+                        </div>
+                        <div class="user-info-item">
+                            <label>Phone</label>
+                            <p id="userDetailPhone">-</p>
+                        </div>
+                        <div class="user-info-item">
+                            <label>Current Plan</label>
+                            <p id="userDetailPlan">-</p>
+                        </div>
+                        <div class="user-info-item">
+                            <label>Registered</label>
+                            <p id="userDetailRegistered">-</p>
+                        </div>
+                        <div class="user-info-item">
+                            <label>Last Active</label>
+                            <p id="userDetailLastActive">-</p>
+                        </div>
+                    </div>
+
+                    <div class="user-activity">
+                        <h4>Activity Summary</h4>
+                        <div class="activity-stats">
+                            <div class="activity-stat">
+                                <span class="activity-label">Videos Watched</span>
+                                <span class="activity-value" id="userVideosWatched">0</span>
+                            </div>
+                            <div class="user-test-attempts">
+                                <h4>Test History</h4>
+                                <div class="table-container" style="max-height: 250px; overflow-y: auto;">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Test Name</th>
+                                                <th>Score</th>
+                                                <th>Percentage</th>
+                                                <th>Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="userTestAttemptsList">
+                                            <tr>
+                                                <td colspan="4" class="empty-state">Loading...</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="activity-stat">
+                                <span class="activity-label">Doubts Asked</span>
+                                <span class="activity-value" id="userDoubtsAsked">0</span>
+                            </div>
+                            <div class="activity-stat">
+                                <span class="activity-label">Average Score</span>
+                                <span class="activity-value" id="userAvgScore">0%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="user-purchased">
+                        <h4>Purchased Content / Subscriptions</h4>
+                        <div id="userPurchasedList">
+                            <p class="empty-state">Loading...</p>
+                        </div>
+                    </div>
+
+                    <div class="user-actions-section">
+                        <h4>Manage Access</h4>
+                        <form id="manageAccessForm">
+                            <div class="form-group">
+                                <label for="grantSubject">Grant Subject Access</label>
+                                <select id="grantSubject">
+                                    <option value="">Select Subject/Package</option>
+                                    <option value="Remote Sensing">Remote Sensing</option>
+                                    <option value="GIS">GIS</option>
+                                    <option value="Image Processing">Image Processing</option>
+                                    <option value="GPS">GPS</option>
+                                    <option value="Surveying">Surveying</option>
+                                    <option value="Engineering Mathematics">Engineering Mathematics</option>
+                                    <option value="General Aptitude">General Aptitude</option>
+                                    <option value="Test Series Only">Test Series Only</option> 
+                                    <option value="Master Package">Master Package (All)</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn-primary">Grant Access</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="editVideoModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit Video</h3>
+                <button class="modal-close" data-modal="editVideoModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editVideoForm">
+                    <input type="hidden" id="editVideoId">
+
+                    <div class="form-group">
+                        <label for="editVideoTitle">Video Title *</label>
+                        <input type="text" id="editVideoTitle" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editVideoSubject">Subject *</label>
+                        <select id="editVideoSubject" required>
+                            <option value="Remote Sensing">Remote Sensing</option>
+                            <option value="GIS">GIS</option>
+                            <option value="Image Processing">Image Processing</option>
+                            <option value="GPS">GPS</option>
+                            <option value="Surveying">Surveying</option>
+                            <option value="Engineering Mathematics">Engineering Mathematics</option>
+                            <option value="General Aptitude">General Aptitude</option>
+                             <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editVideoChapter">Chapter *</label>
+                        <input type="text" id="editVideoChapter" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editVideoOrder">Order/Sequence</label>
+                        <input type="number" id="editVideoOrder" min="1">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editVideoDescription">Description</label>
+                        <textarea id="editVideoDescription" rows="3"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editVideoAccess">Access Level *</label>
+                        <select id="editVideoAccess" required>
+                            <option value="free">Free</option>
+                            <option value="premium">Premium</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editVideoTags">Tags (comma-separated)</label>
+                        <input type="text" id="editVideoTags">
+                    </div>
+
+                    <div class="modal-actions">
+                        <button type="button" class="btn-secondary" data-modal="editVideoModal">Cancel</button>
+                        <button type="submit" class="btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- TEST RESULTS MODAL (FEATURE 3) -->
+    <!-- ============================================ -->
+    <div class="modal" id="testResultsModal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3 id="testResultsTitle">Test Results: Loading...</h3>
+                <button class="modal-close" data-modal="testResultsModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Summary Stats -->
+                <div class="test-results-summary">
+                    <div class="summary-item">
+                        <span class="summary-label">Subject</span>
+                        <span class="summary-value" id="resultsSubject">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Total Marks</span>
+                        <span class="summary-value" id="resultsTotalMarks">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Attempts</span>
+                        <span class="summary-value" id="resultsAttemptsCount">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Avg. Score (%)</span>
+                        <span class="summary-value" id="resultsAvgScore">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Highest Score (%)</span>
+                        <span class="summary-value" id="resultsHighScore">-</span>
+                    </div>
+                </div>
+
+                <!-- Results Table -->
+                <div class="table-container" style="margin-top: 20px;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Student Name</th>
+                                <th>Score</th>
+                                <th>Percentage</th>
+                                <th>Correct</th>
+                                <th>Wrong</th>
+                                <th>Unattempted</th>
+                                <th>Time Taken</th>
+                                <th>Submitted At</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="testResultsTableBody">
+                            <tr>
+                                <td colspan="10" class="empty-state">Loading results...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary" data-modal="testResultsModal">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- MANAGE TEST ACCESS MODAL (FEATURE 2) -->
+    <!-- ============================================ -->
+    <div class="modal" id="manageTestAccessModal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3 id="testAccessTitle">Manage Test Access</h3>
+                <button class="modal-close" data-modal="manageTestAccessModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Users with granted access -->
+                <div class="access-section">
+                    <h4>Users with Access</h4>
+                    <div id="grantedUsersList" class="granted-users-list">
+                        <p class="empty-state">Loading...</p>
+                    </div>
+                </div>
+
+                <!-- Grant access to new users -->
+                <div class="access-section" style="margin-top: 20px;">
+                    <h4>Grant Access to Users</h4>
+                    <div id="allUsersList" class="all-users-list">
+                        <p class="empty-state">Loading...</p>
+                    </div>
+                    <button class="btn-primary" id="grantAccessBtn" style="margin-top: 15px;">
+                        Grant Access to Selected
+                    </button>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary" data-modal="manageTestAccessModal">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+        <div class="loading-spinner"></div>
+        <p id="loadingText">Loading...</p>
+    </div>
+
+    <div class="toast" id="toast">
+        <span id="toastMessage"></span>
+    </div>
+
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    
+    <script type="module" src="assets/js/admin-app.js"></script>
+</body>
+</html>
