@@ -10,7 +10,7 @@ import requests
 from datetime import datetime, timedelta
 from functools import wraps
 from dotenv import load_dotenv
-
+from firebase_admin import credentials, firestore, auth, storage
 from flask import Flask, request, jsonify, Response
 from flask_cors import CORS
 import firebase_admin
@@ -92,59 +92,38 @@ def after_request(response):
     
     return response
 
-# ===================================
+
+# ============================================
 # FIREBASE INITIALIZATION
-# ===================================
+# ============================================
 
-service_account_path = os.getenv('FIREBASE_SERVICE_ACCOUNT_PATH', 'serviceAccountKey.json')
-storage_bucket_name = os.getenv('FIREBASE_STORAGE_BUCKET') # Get bucket name from env
-
-# --- Make sure storage is imported ---
-from firebase_admin import credentials, firestore, auth, storage # Added storage
-
-db = None
-bucket = None
+# Check if credentials are in environment variable (Render deployment)
+FIREBASE_CREDENTIALS = os.environ.get('FIREBASE_CREDENTIALS')
 
 try:
-    if os.path.exists(service_account_path):
-        cred = credentials.Certificate(service_account_path)
-        print(f"✅ Using service account file: {service_account_path}")
+    if FIREBASE_CREDENTIALS:
+        # Production: Credentials are in environment variable
+        import json
+        credentials_dict = json.loads(FIREBASE_CREDENTIALS)
+        cred = credentials.Certificate(credentials_dict)
+        print("✅ Using Firebase credentials from environment variable")
     else:
-        cred = credentials.Certificate({
-            "type": "service_account",
-            "project_id": os.getenv('FIREBASE_PROJECT_ID'),
-            "private_key_id": os.getenv('FIREBASE_PRIVATE_KEY_ID'),
-            "private_key": os.getenv('FIREBASE_PRIVATE_KEY', '').replace('\\n', '\n'),
-            "client_email": os.getenv('FIREBASE_CLIENT_EMAIL'),
-            "client_id": os.getenv('FIREBASE_CLIENT_ID'),
-            "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-            "token_uri": "https://oauth2.googleapis.com/token",
-            "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-            "client_x509_cert_url": os.getenv('FIREBASE_CLIENT_CERT_URL')
-        })
-        print("✅ Using service account from environment variables")
-
-    # Initialize the Firebase app
-    firebase_admin.initialize_app(cred)
-    print("✅ Firebase App initialized successfully.")
-
-    # Get Firestore client
+        # Development: Credentials are in file
+        FIREBASE_CREDENTIALS_PATH = os.environ.get('FIREBASE_CREDENTIALS_PATH', 'firebase-admin-key.json')
+        cred = credentials.Certificate(FIREBASE_CREDENTIALS_PATH)
+        print(f"✅ Using Firebase credentials from file: {FIREBASE_CREDENTIALS_PATH}")
+    
+    # Initialize Firebase with the credentials
+    firebase_admin.initialize_app(cred, {
+        'storageBucket': 'geocatalyst-production.firebasestorage.app'
+    })
     db = firestore.client()
-    print("✅ Firestore client initialized.")
-
-    # --- Get Storage bucket reference ---
-    if storage_bucket_name:
-        bucket = storage.bucket(storage_bucket_name)
-        print(f"✅ Storage bucket '{storage_bucket_name}' initialized.")
-    else:
-        print("⚠️ FIREBASE_STORAGE_BUCKET not set in environment. Storage operations will fail.")
-        bucket = None
-    # --- End Storage ---
-
+    bucket = storage.bucket()
+    print("✅ Firebase Admin SDK initialized successfully")
 except Exception as e:
     print(f"⚠️ Firebase initialization error: {e}")
     db = None
-    bucket = None # Ensure bucket is None on error
+    bucket = None
 
 # ===================================
 # CLOUDFLARE STREAM CONFIGURATION
