@@ -8,7 +8,6 @@ import { getAuth } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth
 import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
 // Firebase configuration
-// These values come from Firebase Console > Project Settings > Your apps
 const firebaseConfig = {
     apiKey: "AIzaSyCSWxF7rq6zc-qtPiFqCfI8i59g7SZkgUc",
     authDomain: "geocatalyst-production.firebaseapp.com",
