@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "geocatalyst-production"
+  },
+  "targets": {
+    "geocatalyst-production": {
+      "hosting": {
+        "admin": [
+          "geocatalyst-admin"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
